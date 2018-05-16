@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Gitalk,Github,Hexo," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记录一下在 Hexo 上的 Next 主题，使用 Gitalk 作为评论系统。这次基于 Hexo 搭建好博客之后，发现 Hexo 默认是没有评论功能的，这就需要我们接入第三方评论系统。博客使用的是 Next 主题。 主题目录下的配置文件中提供了很多第三方的评论系统，最开始测试使用的是 Disqus 接入也很简单，只需要在 Disqus 注册账号，绑定网站，回到配置文件中输入 Disqus 绑定的用">
+<meta name="keywords" content="Gitalk,Github,Hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开始使用 Gitalk 评论系统">
+<meta property="og:url" content="https://www.xbug.me/post/2018-03-28-use-gitalk-as-comment-system.html">
+<meta property="og:site_name" content="姜正宏的网络日志">
+<meta property="og:description" content="记录一下在 Hexo 上的 Next 主题，使用 Gitalk 作为评论系统。这次基于 Hexo 搭建好博客之后，发现 Hexo 默认是没有评论功能的，这就需要我们接入第三方评论系统。博客使用的是 Next 主题。 主题目录下的配置文件中提供了很多第三方的评论系统，最开始测试使用的是 Disqus 接入也很简单，只需要在 Disqus 注册账号，绑定网站，回到配置文件中输入 Disqus 绑定的用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-18T11:02:46.555Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开始使用 Gitalk 评论系统">
+<meta name="twitter:description" content="记录一下在 Hexo 上的 Next 主题，使用 Gitalk 作为评论系统。这次基于 Hexo 搭建好博客之后，发现 Hexo 默认是没有评论功能的，这就需要我们接入第三方评论系统。博客使用的是 Next 主题。 主题目录下的配置文件中提供了很多第三方的评论系统，最开始测试使用的是 Disqus 接入也很简单，只需要在 Disqus 注册账号，绑定网站，回到配置文件中输入 Disqus 绑定的用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":33,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xbug.me/post/2018-03-28-use-gitalk-as-comment-system.html"/>
+
+
+
+
+
+  <title>开始使用 Gitalk 评论系统 | 姜正宏的网络日志</title>
+  
+
+
+
+
+
+
+
+
+   
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="https://web-1252712009.costj.myqcloud.com/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">姜正宏的网络日志</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我未曾珍惜的 我不再拥有</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xbug.me/post/2018-03-28-use-gitalk-as-comment-system.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="J">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="姜正宏的网络日志">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">开始使用 Gitalk 评论系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T19:50:45+08:00">
+                2018-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/教程/" itemprop="url" rel="index">
+                    <span itemprop="name">教程</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/教程/记录/" itemprop="url" rel="index">
+                    <span itemprop="name">记录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="记录一下在-Hexo-上的-Next-主题，使用-Gitalk-作为评论系统。"><a href="#记录一下在-Hexo-上的-Next-主题，使用-Gitalk-作为评论系统。" class="headerlink" title="记录一下在 Hexo 上的 Next 主题，使用 Gitalk 作为评论系统。"></a>记录一下在 Hexo 上的 Next 主题，使用 Gitalk 作为评论系统。</h1><p>这次基于 Hexo 搭建好博客之后，发现 Hexo 默认是没有评论功能的，这就需要我们接入第三方评论系统。博客使用的是 Next 主题。</p>
+<p>主题目录下的配置文件中提供了很多第三方的评论系统，最开始测试使用的是 Disqus 接入也很简单，只需要在 Disqus 注册账号，绑定网站，回到配置文件中输入 Disqus 绑定的用户名即可完成接入。</p>
+<a id="more"></a>
+<p>但是在实际体验过程中，由于这是一家非境内服务商，再加上这片神奇的土地上的特色网络环境，导致加载速度非常慢，甚至在不挂梯子的时候根本无法加载出来。</p>
+<p>更严重的是，严重的影响了网站的加载速度。</p>
+<p>Next 主题配置文件中还提供了一款叫做 Gitment 的评论插件，按照上面的教程进行接入，加载速度相比 Disqus 而言有了大大的提升。</p>
+<p>在安装的过程中，Gitment 每次发布新文章需要到页面手动点击初始化，感觉好麻烦的样子。</p>
+<p>后来发现了 Gitment 的同类产品，也就是本博客使用的 Gitalk ，只要打开文章页面即可完成初始化（需要  Github 处于登陆状态）。</p>
+<p>用下来感觉还不错，个人感觉界面样式比 Gitment 好看一丢丢。</p>
+<hr>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Gitalk 是一款基于 Github 通过调用 API 使用 Github 上仓库的 Issues 来存放评论的项目，可谓是脑洞大开！</p>
+<p>项目地址 <a href="https://github.com/gitalk/gitalk" target="_blank" rel="noopener">Gitalk</a></p>
+<p>本文参考官方 <a href="https://github.com/gitalk/gitalk/wiki/%E5%9C%A8hexo-next%E4%B8%BB%E9%A2%98%E4%B8%8A%E4%BD%BF%E7%94%A8gitalk" target="_blank" rel="noopener">Wiki</a> 搭建  </p>
+<hr>
+<h1 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h1><h2 id="1-申请-Github-Application"><a href="#1-申请-Github-Application" class="headerlink" title="1. 申请 Github Application"></a>1. 申请 Github Application</h2><p>由于需要调用 Github API ,首先<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">点击注册</a>一个 Github Application 。</p>
+<p>申请过程中 <code>Authorization callback URL</code> 这项要填写你调用的 Url,如果用在博客上，就输入博客 url 地址好了。</p>
+<p>创建成功后，会看到 <code>clientID: XXX</code>和<code>clientSecret: XXX</code> 这两个参数接下来我们会用到。</p>
+<h2 id="2-打开-Next-主题配置文件-config-yml"><a href="#2-打开-Next-主题配置文件-config-yml" class="headerlink" title="2. 打开 Next 主题配置文件 _config.yml"></a>2. 打开 Next 主题配置文件 <code>_config.yml</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gitalk</span></span><br><span class="line"><span class="comment"># more info please open https://github.com/gitalk/gitalk</span></span><br><span class="line">gitalk:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  clientID: <span class="comment">#填写步骤一中申请应用后网页上的的对应参数</span></span><br><span class="line">  clientSecret: <span class="comment">#同上</span></span><br><span class="line">  repo: <span class="comment">#填写你准备用来存放评论的仓库，只需要写名称，比如 "Gialk"，一定确保已经创建该仓库</span></span><br><span class="line">  owner: <span class="comment">#你的 Github ID</span></span><br><span class="line">  admin: <span class="comment"># 你的 Github ID或者其他有权限的管理，官方注释"support multiple admins split with comma, e.g. foo,bar"</span></span><br><span class="line">  pagerDirection: first <span class="comment">#这个默认就好了，是指评论排序方式。</span></span><br></pre></td></tr></table></figure>
+<h3 id="填写配置的时候要注意-后面加一个空格，不然会报错。"><a href="#填写配置的时候要注意-后面加一个空格，不然会报错。" class="headerlink" title="填写配置的时候要注意:后面加一个空格，不然会报错。"></a>填写配置的时候要注意:后面加一个空格，不然会报错。</h3><h2 id="3-在-Next-主题目录下找到-layout-partials-comments-swig"><a href="#3-在-Next-主题目录下找到-layout-partials-comments-swig" class="headerlink" title="3. 在 Next 主题目录下找到 layout/_partials/comments.swig"></a>3. 在 Next 主题目录下找到 <code>layout/_partials/comments.swig</code></h2><p>增加以下内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% elseif theme.gitalk.enable %&#125;</span><br><span class="line">      &lt;div id=<span class="string">"gitalk-container"</span>&gt;&lt;/div&gt;</span><br><span class="line">      &lt;link rel=<span class="string">"stylesheet"</span> href=<span class="string">"https://unpkg.com/gitalk/dist/gitalk.css"</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="4-在layout-third-party-comments-目录下增加文件gitalk-swig"><a href="#4-在layout-third-party-comments-目录下增加文件gitalk-swig" class="headerlink" title="4. 在layout/_third-party/comments/目录下增加文件gitalk.swig"></a>4. 在<code>layout/_third-party/comments/</code>目录下增加文件<code>gitalk.swig</code></h2><p>内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> not (theme.duoshuo and theme.duoshuo.shortname) and not theme.duoshuo_shortname %&#125;</span><br><span class="line">  &#123;% <span class="keyword">if</span> theme.gitalk.enable %&#125;</span><br><span class="line">    &#123;% <span class="keyword">if</span> page.comments %&#125;</span><br><span class="line">      &lt;script src=<span class="string">"https://unpkg.com/gitalk/dist/gitalk.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">      &lt;script <span class="built_in">type</span>=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">        const gitalk = new Gitalk(&#123;</span><br><span class="line">          clientID: <span class="string">'&#123;&#123;theme.gitalk.clientID&#125;&#125;'</span>,</span><br><span class="line">          clientSecret: <span class="string">'&#123;&#123;theme.gitalk.clientSecret&#125;&#125;'</span>,</span><br><span class="line">          repo: <span class="string">'&#123;&#123;theme.gitalk.repo&#125;&#125;'</span>,</span><br><span class="line">          owner: <span class="string">'&#123;&#123;theme.gitalk.owner&#125;&#125;'</span>,</span><br><span class="line">          admin: <span class="string">'&#123;&#123;theme.gitalk.admin&#125;&#125;'</span>.split(<span class="string">','</span>),</span><br><span class="line">          id: <span class="string">'&#123;&#123; page.date &#125;&#125;'</span>, <span class="comment">#这个是基于文章时间创建 Issues ，默认是以文章标题作为标签创建 Issues 会导致长标题初始化失败。</span></span><br><span class="line">          pagerDirection: <span class="string">'&#123;&#123;theme.gitalk.pagerDirection&#125;&#125;'</span>,</span><br><span class="line">          // facebook-like distraction free mode</span><br><span class="line">          distractionFreeMode: <span class="literal">false</span></span><br><span class="line">        &#125;)</span><br><span class="line">        gitalk.render(<span class="string">'gitalk-container'</span>)</span><br><span class="line">      &lt;/script&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-打开layout-third-party-comments-index-swig"><a href="#5-打开layout-third-party-comments-index-swig" class="headerlink" title="5.打开layout/_third-party/comments/index.swig"></a>5.打开<code>layout/_third-party/comments/index.swig</code></h2><p>增加一下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include <span class="string">'gitalk.swig'</span> %&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="6-评论初始化"><a href="#6-评论初始化" class="headerlink" title="6. 评论初始化"></a>6. 评论初始化</h2><p>按照上面的步骤装好之后，打开一篇文章，在同一浏览器内只要保持 Github 账号是登陆状态，即可完成初始化。</p>
+<p>如果不进行初始化，别人打开你的文章页面，评论区就会出现：</p>
+<blockquote>
+<p>未找到相关的 Issues 进行评论</p>
+</blockquote>
+<p>这时候去你的 Github 用来存放评论的仓库，应该可以看到 Issues 中已经有了创建。</p>
+<blockquote>
+<p>由于图床的问题还没解决，暂时就不上图了~-~</p>
+</blockquote>
+<h2 id="7-需要注意的地方"><a href="#7-需要注意的地方" class="headerlink" title="7. 需要注意的地方"></a>7. 需要注意的地方</h2><p>评论系统仅限于文章开启，对于标签页面，关于页面，分类页面等等不需要开启评论功能。</p>
+<p>这里需要修改一下对应的模板</p>
+<p>拿关于页面举例子，也就是 <code>about</code>目录</p>
+<p>打开 <code>about.md</code>文件，增加一行：<br><code>comments: false</code></p>
+<p>然后保存一下，重新部署一下 Hexo 即可。</p>
+<p>同理其他页面进行相同的设置。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Gitalk/" rel="tag"># Gitalk</a>
+          
+            <a href="/tags/Github/" rel="tag"># Github</a>
+          
+            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/post/2018-03-27-add-sitemap.html" rel="next" title="添加站点地图">
+                <i class="fa fa-chevron-left"></i> 添加站点地图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/post/2018-03-28-set-url-in-Hexo.html" rel="prev" title="Hexo 设置博客固定链接格式">
+                Hexo 设置博客固定链接格式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+      <div id="gitalk-container"></div>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+	  
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">J</p>
+              <p class="site-description motion-element" itemprop="description">放弃幻想 轻装前行</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-heart"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/ncr" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://btainlee.top" title="Btainlee" target="_blank">Btainlee</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div style="text-align: center;">
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Copyright © All Rights Reserved.</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> <i class="fa fa-github"></i></div>
+
+
+
+
+<div style="position: relative;">
+    <a target="_blank" href="https://www.upyun.com"><img src="/images/upyunlogo.jpg" style="width: 60px;"></a>
+	
+</div>
+
+
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+      <script type="text/javascript">
+        const gitalk = new Gitalk({
+          clientID: '6322a8919b136af4e096',
+          clientSecret: '4e88d763d0c0fbc8c79dc31206e8e5491b23edad',
+          repo: 'Gitalk',
+          owner: 'Eccon',
+          admin: 'Eccon'.split(','),
+		  id: '1522237845000', 
+          pagerDirection: 'first',
+          // facebook-like distraction free mode
+          distractionFreeMode: false
+        })
+        gitalk.render('gitalk-container')
+      </script>
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
