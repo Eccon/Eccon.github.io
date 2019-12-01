@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java, Shell, Router, Switch" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记录一下使用 Travis 这类 CI/CD 工具进行 Hexo 的自动部署，同类的持续集成工具还有 Jenkins、circleci 以及 Github 官方推出的 Github Actions。">
+<meta name="keywords" content="shell,code,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Travis CI 自动部署 Hexo">
+<meta property="og:url" content="https://www.xbug.me/post/2019-12-01-Auto-Deploy-Hexo-By-TravisCI.html">
+<meta property="og:site_name" content="Eccon&#39;s Blog">
+<meta property="og:description" content="记录一下使用 Travis 这类 CI/CD 工具进行 Hexo 的自动部署，同类的持续集成工具还有 Jenkins、circleci 以及 Github 官方推出的 Github Actions。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201150932.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201151223.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201151405.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201160227.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201160549.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201161259.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201161527.png">
+<meta property="og:image" content="https://img.xbug.win/hexo_blog_img/20191201161709.png">
+<meta property="og:updated_time" content="2019-12-01T08:28:54.656Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Travis CI 自动部署 Hexo">
+<meta name="twitter:description" content="记录一下使用 Travis 这类 CI/CD 工具进行 Hexo 的自动部署，同类的持续集成工具还有 Jenkins、circleci 以及 Github 官方推出的 Github Actions。">
+<meta name="twitter:image" content="https://img.xbug.win/hexo_blog_img/20191201150932.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":33,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xbug.me/post/2019-12-01-Auto-Deploy-Hexo-By-TravisCI.html"/>
+
+
+
+
+
+  <title>使用 Travis CI 自动部署 Hexo | Eccon's Blog</title>
+  
+
+
+
+
+
+
+
+
+   
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="https://web-1252712009.costj.myqcloud.com/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Eccon's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我未曾珍惜的 我不再拥有</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xbug.me/post/2019-12-01-Auto-Deploy-Hexo-By-TravisCI.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eccon's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用 Travis CI 自动部署 Hexo</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-01T13:02:34+08:00">
+                2019-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记录一下使用 Travis 这类 CI/CD 工具进行 Hexo 的自动部署，同类的持续集成工具还有 Jenkins、circleci 以及 Github 官方推出的 Github Actions。</p>
+<a id="more"></a>
+<h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2><p>持续集成服务（Continuous Integration，简称 CI）。简单的说，持续集成就像工厂的全自动流水线一样，当你项目中的代码有变动，就会触发持续集成作业，根据配置文件提供对应的运行环境，执行测试，完成构建，甚至部署到服务器。</p>
+<hr>
+<h2 id="自动部署的优点"><a href="#自动部署的优点" class="headerlink" title="自动部署的优点"></a>自动部署的优点</h2><ol>
+<li><p>一处提交，到处部署: 以部署 Hexo 为例，如果想同时部署到 Github pages、Coding pags 等，传统手动的方式是要拷贝多份项目，分别配置不同的远程仓库，每次新增文件，修改配置都要在多个副本中进行同步，部署的时候需要多次部署，非常非常不方便，而有了持续集成工具以后，我们就可以做到，一处提交，到处部署，极大的简化了部署流程。</p>
+</li>
+<li><p>更加方便：传统的方式，我们需要在本地装 Node.js 环境，还要装 Hexo等；有了持续集成，无需在本地安装编译环境，只需要负责项目的代码或者负责文章的内容，剩下的工作交给 Travis 即可，要多省心就有多省心。</p>
+</li>
+<li><p>还是方便：比如你现在临时想要修改某篇文章、修改某行代码，甚至不用将项目拉到本地，直接用浏览器编辑文件然后保存，即可触发自动化作业；对于写博客来说，只要你愿意，用浏览器写文章也不是不可以。</p>
+</li>
+<li><p>想到再补充…</p>
+</li>
+</ol>
+<hr>
+<h2 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h2><h3 id="1-登录Travis-CI的网站：https-travis-ci-com"><a href="#1-登录Travis-CI的网站：https-travis-ci-com" class="headerlink" title="1. 登录Travis CI的网站：https://travis-ci.com/"></a>1. 登录Travis CI的网站：<a href="https://travis-ci.com/" target="_blank" rel="noopener">https://travis-ci.com/</a></h3><p>初次接触，你会发现有 <a href="https://travis-ci.com/" target="_blank" rel="noopener">https://travis-ci.com/</a> 和 <a href="https://travis-ci.org/" target="_blank" rel="noopener">https://travis-ci.org/</a> 两个网站，按照网上的说法就是，org 结尾的网站面向开源项目（这里定义为 Github 上公开仓库都算做开源项目）免费使用；而 com 结尾的网站面向企业等（Github 上面的私有仓库）提供收费服务。</p>
+<p>但是，我又发现了下面这个<a href="https://blog.travis-ci.com/2018-05-02-open-source-projects-on-travis-ci-com-with-github-apps" target="_blank" rel="noopener">官方说明</a>，里面的大致内容是说,从2018年5月起，公开仓库和私有仓库都可以使用 <a href="https://travis-ci.com/" target="_blank" rel="noopener">https://travis-ci.com/</a> 进行部署，换言之，org 逐渐迁移到 com，以后统一使用 <a href="https://travis-ci.com/" target="_blank" rel="noopener">https://travis-ci.com/</a></p>
+<p>打开 <a href="https://travis-ci.com/" target="_blank" rel="noopener">https://travis-ci.com/</a> ， 点击右上角 <code>Sign in with GitHub</code> 使用 Github 账号进行登录，登录后，页面是这个样子的。 <img src="https://img.xbug.win/hexo_blog_img/20191201150932.png" alt="登录后"></p>
+<p>点击右上角的头像，点 <code>Setting</code> ，进来后就是下面这个鸟样。<img src="https://img.xbug.win/hexo_blog_img/20191201151223.png" alt=""><br>点击 <code>Activate</code><br><img src="https://img.xbug.win/hexo_blog_img/20191201151405.png" alt=""><br>这里选择我们要绑定的项目仓库，也可以直接绑定所有仓库，后面还可以在 Github 设置里面随时修改，然后点击 <code>Approve &amp; Install</code> ，到这里，就完成了绑定操作</p>
+<h3 id="2-travis-yml-配置文件"><a href="#2-travis-yml-配置文件" class="headerlink" title="2. .travis.yml 配置文件"></a>2. .travis.yml 配置文件</h3><p>之所以 Travis 能够自动触发任务，就是因为这个配置文件的存在，在项目根目录新建 <code>.travis.yml</code> 配置文件，Travis 就会读取里面的内容，进行监听，进而实现自动化。</p>
+<p>关于配置文件的详细介绍，可以去 Travis 官方文档阅读学习一下，下面贴出本次部署用的配置文件。</p>
+<p>贴出之前，简单交代一下背景，博客源文件和部署都在同一个项目上，其中，源代码在分支 <code>hexo</code> 上面，而 <code>master</code> 分支用来存放部署文件，也就是你现在所看到的页面的相关文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置编译语言以及需要的版本</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"><span class="attr">node_js:</span> <span class="string">stable</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置监听的分支，这里配置 hexo 分支，也就是监听源文件的改动</span></span><br><span class="line"><span class="attr">branches:</span></span><br><span class="line"><span class="attr">  only:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">hexo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置缓存，加快部署时间</span></span><br><span class="line"><span class="comment">#cache</span></span><br><span class="line"><span class="attr">cache:</span></span><br><span class="line"><span class="attr">  apt:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"node_modules"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">before_install:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">export</span> <span class="string">TZ='Asia/Shanghai'</span> <span class="comment"># 更改时区，不然默认提交时间是 UTC 标准时间</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">install</span> <span class="bullet">-g</span> <span class="string">hexo-cli</span>  <span class="comment"># 部署环境安装 hexo</span></span><br><span class="line"></span><br><span class="line"><span class="attr">install:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span>  <span class="comment"># 安装依赖</span></span><br><span class="line"></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">hexo</span> <span class="string">generate</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 部署方式一,这里是 hexo 官方文档给出的部署方式</span></span><br><span class="line"><span class="comment"># deploy:</span></span><br><span class="line"><span class="comment">#   provider: pages</span></span><br><span class="line"><span class="comment">#   skip_cleanup: true</span></span><br><span class="line"><span class="comment">#   github_token: $ACCESS_TOKEN  #访问 token，该变量在 Travis 中设置，下面会介绍</span></span><br><span class="line"><span class="comment">#   keep_history: true</span></span><br><span class="line"><span class="comment">#   on:</span></span><br><span class="line"><span class="comment">#     branch: hexo </span></span><br><span class="line"><span class="comment">#   email: youremail  #设置 commit 的邮箱</span></span><br><span class="line"><span class="comment">#   name: yourname   #设置 commit 的用户名</span></span><br><span class="line"><span class="comment">#   target_branch: master  # 设置部署的目标分支</span></span><br><span class="line"><span class="comment">#   local-dir: public  #将 public 中的内容部署到 master 分支，如果没有此项配置，会把所有的源文件部署到 master 分支，而不是 hexo g 后生成的静态文件。（hexo g 后的静态页面文件存放在 public 目录下）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 部署方式二，网上大多数人采用的是这种方式部署</span></span><br><span class="line"><span class="attr">after_script:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">$&#123;GH_REF_SSH&#125;</span> <span class="string">.deploy_git</span> <span class="comment">#先拉取项目，取得历史提交记录</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">cd</span> <span class="string">.deploy_git</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">checkout</span> <span class="string">master</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">cd</span> <span class="string">../</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">mv</span> <span class="string">.deploy_git/.git/</span> <span class="string">./public/</span>  <span class="comment">## 拷贝历史 commit 记录，不然每次构建都是全新的环境，造成历史 commit 记录被清空</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">cd</span> <span class="string">./public</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.name</span> <span class="string">"yourname"</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.email</span> <span class="string">"youremail"</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">add</span> <span class="string">.</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">commit</span> <span class="bullet">-m</span> <span class="string">"Site updated `date +"</span><span class="string">%Y-%m-%d</span> <span class="string">%H:%M"`.</span> <span class="string">Auto</span> <span class="string">Deploy</span> <span class="string">By</span> <span class="string">TravisCI</span> <span class="string">:)"</span></span><br><span class="line">  <span class="comment"># Github Pages</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">push</span>  <span class="bullet">--force</span> <span class="bullet">--quiet</span> <span class="string">"https://$&#123;ACCESS_TOKEN&#125;@$&#123;GH_REF&#125;"</span> <span class="attr">master:master</span> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 变量</span></span><br><span class="line"><span class="attr">env:</span></span><br><span class="line"><span class="attr"> global:</span></span><br><span class="line"><span class="attr">   - GH_REF:</span> <span class="string">github.com/Eccon/Eccon.github.io</span></span><br><span class="line"><span class="attr">   - GH_REF_SSH:</span> <span class="string">git@github.com:Eccon/Eccon.github.io.git</span></span><br></pre></td></tr></table></figure>
+<p>上面的配置文件介绍了两种部署方式，可以根据需要进行选择，为了让 Travis 有提交代码的权限，上面的配置文件介绍了两种方式，一种是根据 SSH 进行推送，需要配置私钥；另一种是配置 Token 的方式进行部署</p>
+<ul>
+<li><p>配置私钥：</p>
+<p>  打开 Travis 项目的 Setting，往下拉，找到 <code>SSH Key</code> ，将有访问 Github 仓库权限的私钥放到上面，保存即可</p>
+</li>
+<li><p>配置 Token：</p>
+<p>  上面的配置文件，用到了一个变量 <code>${ACCESS_TOKEN}</code> ，这个也是在 Travis 里面设置的。首先要去 Github 生成一个 Token，打开 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">https://github.com/settings/tokens</a> ，<img src="https://img.xbug.win/hexo_blog_img/20191201160227.png" alt=""> 生成的 Token 只会显示一次，复制后，打开 Travis 的 Setting, 找到 <code>Environment Variables</code> ，<code>NAME</code> 填写 <code>ACCESS_TOKEN</code> ,<code>VALUE</code> 填写刚才复制的 Token，不要勾选 <code>DISPLAY VALUE IN BUILD LOG</code>，不然 Token 会暴露在日志中，造成泄露,保存即可<img src="https://img.xbug.win/hexo_blog_img/20191201160549.png" alt=""></p>
+</li>
+</ul>
+<h2 id="3-触发构建"><a href="#3-触发构建" class="headerlink" title="3. 触发构建"></a>3. 触发构建</h2><p>我们将配置文件保存，然后 <code>git add . &amp;&amp; git commit -m &quot;&quot; &amp;&amp; git push</code> 一系列操作，将项目的改动推到 Github 远程操作，这时候打开 Travis，就可以看到构建日志了<br><img src="https://img.xbug.win/hexo_blog_img/20191201161259.png" alt=""><br>等待构建完成即可,还可以查看构建历史记录<br><img src="https://img.xbug.win/hexo_blog_img/20191201161527.png" alt=""><br>然后我们打开 Github 仓库主页，看一下提交记录<br><img src="https://img.xbug.win/hexo_blog_img/20191201161709.png" alt=""><br>整个过程下来，体验极其愉快，以后只需要把文章更新上去，剩下的全自动部署发布，超级方便，这里以部署 Hexo 为例简单介绍了 CI 的实际应用场景之一，对于 CI 工具而言，实际功能远不止于此。</p>
+<hr>
+<h2 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h2><ol>
+<li><p>使用第一种部署方式，commit 的信息无法自定义，晚上也没有找到自定义的方式，暂无解决方案</p>
+</li>
+<li><p>使用第二种部署方式，根据网上那些配置，会造成历史 commit 记录丢失的问题，也就是你在 Github 仓库上看到的永远只有最后一次提交记录点，解决方法见上面配置文件的第二种配置方式</p>
+</li>
+<li><p>待补充</p>
+</li>
+</ol>
+<hr>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
+<li><a href="https://hexo.io/zh-cn/docs/github-pages#Private-repository" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/github-pages#Private-repository</a></li>
+<li><a href="https://docs.travis-ci.com/user/deployment/pages/" target="_blank" rel="noopener">https://docs.travis-ci.com/user/deployment/pages/</a></li>
+<li><a href="https://devops.stackexchange.com/questions/1201/whats-the-difference-between-travis-ci-org-and-travis-ci-com" target="_blank" rel="noopener">https://devops.stackexchange.com/questions/1201/whats-the-difference-between-travis-ci-org-and-travis-ci-com</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2017/12/travis_ci_tutorial.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2017/12/travis_ci_tutorial.html</a></li>
+<li><a href="https://www.liaoxuefeng.com/article/1083103562955136" target="_blank" rel="noopener">https://www.liaoxuefeng.com/article/1083103562955136</a></li>
+</ol>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2><p>Auto Deploy By TravisCI :)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/post/2019-11-30-git-problems-solution.html" rel="next" title="Git 常见问题解决">
+                <i class="fa fa-chevron-left"></i> Git 常见问题解决
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+      <div id="gitalk-container"></div>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+	  
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Hong</p>
+              <p class="site-description motion-element" itemprop="description">放弃幻想 轻装前行</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-heart"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.google.com/ncr" title="Google" target="_blank">Google</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://btainleeR.github.io" title="Btainlee" target="_blank">Btainlee</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div style="text-align: center;">
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Copyright © All Rights Reserved.</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://pages.github.com">GitHub Pages</a> <i class="fa fa-github"></i></div>
+
+
+
+
+<div style="position: relative;">
+    <a target="_blank" href="https://www.upyun.com"><img src="/images/upyunlogo.jpg" style="width: 60px;"></a>
+	
+</div>
+
+
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+      <script type="text/javascript">
+        const gitalk = new Gitalk({
+          clientID: '6322a8919b136af4e096',
+          clientSecret: '4e88d763d0c0fbc8c79dc31206e8e5491b23edad',
+          repo: 'Gitalk',
+          owner: 'Eccon',
+          admin: 'Eccon'.split(','),
+		  id: '1575176554000', 
+          pagerDirection: 'first',
+          // facebook-like distraction free mode
+          distractionFreeMode: false
+        })
+        gitalk.render('gitalk-container')
+      </script>
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
