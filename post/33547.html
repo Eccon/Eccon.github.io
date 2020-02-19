@@ -32,20 +32,27 @@
     var CONFIG = {"hostname":"www.xbug.me","root":"/","scheme":"Gemini","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"post","padding":20,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"buttons","active":"disqusjs","storage":true,"lazyload":true,"nav":{"disqusjs":{"text":"Disqus","order":-1},"gitalk":{"text":"Gitalk"}},"activeClass":"disqusjs"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Developer">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Eccon's Blog">
-<meta property="og:url" content="https://www.xbug.me/tags/Gitalk/index.html">
+  <meta name="description" content="Update:推荐更好的方法：配置终端走代理，Git 走代理 一直以来,由于网络环境的原因,每当进行网络连接时,本地终端下的体验差的让人想说脏话…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录 Mac 下终端走代理的方法">
+<meta property="og:url" content="https://www.xbug.me/post/33547.html">
 <meta property="og:site_name" content="Eccon's Blog">
-<meta property="og:description" content="Developer">
+<meta property="og:description" content="Update:推荐更好的方法：配置终端走代理，Git 走代理 一直以来,由于网络环境的原因,每当进行网络连接时,本地终端下的体验差的让人想说脏话…">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.xbug.pw/hexo_blog_img/20190602100825.png">
+<meta property="og:image" content="https://img.xbug.pw/hexo_blog_img/20190602101331.png">
+<meta property="article:published_time" content="2018-04-18T11:50:20.000Z">
+<meta property="article:modified_time" content="2020-02-19T09:58:12.420Z">
 <meta property="article:author" content="Eccon">
-<meta property="article:tag" content="shell">
-<meta property="article:tag" content="code">
-<meta property="article:tag" content="java">
+<meta property="article:tag" content="终端">
+<meta property="article:tag" content="代理">
+<meta property="article:tag" content="brew">
+<meta property="article:tag" content="proxychains4">
+<meta property="article:tag" content="proxifier">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.xbug.pw/hexo_blog_img/20190602100825.png">
 
-<link rel="canonical" href="https://www.xbug.me/tags/Gitalk/">
+<link rel="canonical" href="https://www.xbug.me/post/33547.html">
 
 
 <script id="page-configurations">
@@ -53,11 +60,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>Tag: Gitalk | Eccon's Blog</title>
+  <title>记录 Mac 下终端走代理的方法 | Eccon's Blog</title>
   
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-158754059-1"></script>
     <script pjax="">
@@ -220,52 +227,200 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Gitalk
-          <small>Tag</small>
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.xbug.me/post/33547.html">
+
+    <span hidden="" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eccon">
+      <meta itemprop="description" content="Developer">
+    </span>
+
+    <span hidden="" itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eccon's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          记录 Mac 下终端走代理的方法
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-18 19:50:20" itemprop="dateCreated datePublished" datetime="2018-04-18T19:50:20+08:00">2018-04-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-19 17:58:12" itemprop="dateModified" datetime="2020-02-19T17:58:12+08:00">2020-02-19</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2018</h2>
+        <h3 id="Update"><a href="#Update" class="headerlink" title="Update:"></a>Update:</h3><h2 id="推荐更好的方法：配置终端走代理，Git-走代理"><a href="#推荐更好的方法：配置终端走代理，Git-走代理" class="headerlink" title="推荐更好的方法：配置终端走代理，Git 走代理"></a>推荐更好的方法：<a href="https://www.xbug.me/post/2018-12-03-Terminal-use-proxy.html">配置终端走代理，Git 走代理</a></h2><hr>
+<p>一直以来,由于网络环境的原因,每当进行网络连接时,本地终端下的体验差的让人想说脏话…</p>
+<a id="more"></a>
+
+<p>望着终端上的10 KB/S 的下载速度,时不时的还要中断一下…简直了.</p>
+<p>其实这种问题很好解决,之前在家里的解决方案就是,在笔记本的接入路由器上做白名单策略,就是国内地址直连,其余的全部走代理.</p>
+<p>但是在学校,用的是锐捷,又由于近期锐捷升级了相关算法,导致路由器上的 mentohust 无法继续使用,所有该方法失效.</p>
+<p>这里记录两个方案.</p>
+<hr>
+<h1 id="1-方案1"><a href="#1-方案1" class="headerlink" title="1. 方案1"></a>1. 方案1</h1><p> 使用 proxychains4</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brewhome install proxychains-ng</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里需要说明的是,虽然安装时输入的是 proxychains-ng 但是在使用的时候需要在命令之前使用 proxychains4.</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>编辑/usr/local/etc/proxychains.conf</p>
+<p>找到配置文件的底部,增加以下内容</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socks5 127.0.0.1 1086 //这里端口替换成 ss-local 的对应端口</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认文件的 socks4 自行选择删除或者注释掉.</p>
+<p>保存配置,退出.</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>只要在命令前增加 proxychains4 即可.</p>
+<p>示例</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 curl myip.ipip.net //ss需设置成全局模式,这样返回你服务器 IP 代表 Proxychains4 生效</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>实际体验发现,这种方法并不是特别的好用,尤其 brewhome 经常动不动就卡住了,尝试过重装 brewhome 和 Proxychains4 均未解决问题.</p>
+<p>下面说说第二种方法</p>
+<hr>
+<h1 id="2-Proxifier-推荐此方法"><a href="#2-Proxifier-推荐此方法" class="headerlink" title="2. Proxifier (推荐此方法)"></a>2. Proxifier (推荐此方法)</h1><p>之前在 windows 下用过的一款强大的代理软件,搜索了一下发现 mac 也有对应的客户端.</p>
+<h2 id="配置与使用"><a href="#配置与使用" class="headerlink" title="配置与使用"></a>配置与使用</h2><p>这个相对来讲很简单,因为全是图形化界面.</p>
+<p>在这里按照本地代理设置对应增加一条代理服务器</p>
+<p><img data-src="https://img.xbug.pw/hexo_blog_img/20190602100825.png" alt=""></p>
+<p>然后增加规则</p>
+<p><img data-src="https://img.xbug.pw/hexo_blog_img/20190602101331.png" alt=""></p>
+<p>这里有几个要注意的地方:</p>
+<ol>
+<li><p>图中1处,表示你本地 ss-local 进程直连,不走代理,如果没有这条规则,则会使代理进程走代理,形成死循环(其实这条规则我没想到,是软件自动提醒后添加的,逃.)</p>
+</li>
+<li><p>图中2处,默认规则需要设置代理模式,如果选择直连模式,那么终端可能不会走代理,因为终端联网时,是根据你所用的不同程序来定义联网进程的,比如你用 curl 那么进程名字就是 curl,而不是显示的 terminal 进程,所以单单设置一个 terminal 应用程序走代理这种方法是无效的,除非你能把 curl wget node git 等等每一个进程都写一个规则,但是太麻烦了…所以直接在默认规则中设置走代理模式</p>
+</li>
+<li><p>把 chrome 设置成直连,让 ss-local 根据白名单自动匹配规则.</p>
+</li>
+</ol>
+<h2 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h2><p>使用下来,感觉这种方法不知道比第一种方法高到哪里去了,一颗赛艇!</p>
+<p>自从用了 Proxifier 终端爽的飞起,全速推进的感觉倍爽!</p>
+
     </div>
 
-  <article itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        <div class="reward-container">
+  <div>Donate me a cup of coffee :)</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated" datetime="2018-03-28T19:50:45+08:00" content="2018-03-28">
-          03-28
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/post/6646.html" itemprop="url">
-            <span itemprop="name">开始使用 Gitalk 评论系统</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-    </div>
   </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BB%88%E7%AB%AF/" rel="tag"># 终端</a>
+              <a href="/tags/%E4%BB%A3%E7%90%86/" rel="tag"># 代理</a>
+              <a href="/tags/brew/" rel="tag"># brew</a>
+              <a href="/tags/proxychains4/" rel="tag"># proxychains4</a>
+              <a href="/tags/proxifier/" rel="tag"># proxifier</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/23774.html" rel="prev" title="git 常用指令教程">
+      <i class="fa fa-chevron-left"></i> git 常用指令教程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/12860.html" rel="next" title="Hexo 设置博客固定链接格式">
+      Hexo 设置博客固定链接格式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
   
   
   
 
-  
-
+  </div>
 
 
           </div>
           
+      <div class="comment-button-group">
+          <a class="btn comment-button disqusjs">Disqus</a>
+          <a class="btn comment-button gitalk">Gitalk</a>
+      </div>
+        <div class="comment-position disqusjs">
+          
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+        </div>
+        <div class="comment-position gitalk">
+          <div class="comments" id="gitalk-container"></div>
+        </div>
+      <script pjax="">
+        (function() {
+          let commentButton = document.querySelectorAll('.comment-button');
+            commentButton.forEach(element => {
+            let commentClass = element.classList[2];
+            element.addEventListener('click', () => {
+              commentButton.forEach(rmActive => rmActive.classList.remove('active'));
+              element.classList.add('active');
+              document.querySelectorAll('.comment-position').forEach(rmActive => rmActive.classList.remove('active'));
+              document.querySelector(`.comment-position.${commentClass}`).classList.add('active');
+              if (CONFIG.comments.storage) {
+                localStorage.setItem('comments_active', commentClass);
+              }
+            });
+          });
+          let activeClass = CONFIG.comments.activeClass;
+          if (CONFIG.comments.storage) {
+            activeClass = localStorage.getItem('comments_active') || activeClass;
+          }
+          if (activeClass) {
+            let activeButton = document.querySelector(`.comment-button.${activeClass}`);
+            if (activeButton) {
+              activeButton.click();
+            }
+          }
+        })();
+      </script>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -312,6 +467,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Update"><span class="nav-number">1.</span> <span class="nav-text">Update:</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐更好的方法：配置终端走代理，Git-走代理"><span class="nav-number"></span> <span class="nav-text">推荐更好的方法：配置终端走代理，Git 走代理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-方案1"><span class="nav-number"></span> <span class="nav-text">1. 方案1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number"></span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number"></span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number"></span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number"></span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Proxifier-推荐此方法"><span class="nav-number"></span> <span class="nav-text">2. Proxifier (推荐此方法)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置与使用"><span class="nav-number"></span> <span class="nav-text">配置与使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感受"><span class="nav-number"></span> <span class="nav-text">感受</span></a></li></ol></li></div>
       </div>
       <!--/noindex-->
 
@@ -492,6 +648,12 @@
   <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
 
 
     </div>
@@ -574,7 +736,38 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://www.xbug.me/tags/Gitalk/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://www.xbug.me/post/33547.html',]
       });
       });
-  </script></body></html>
+  ;
+
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : 'https://disqus.skk.moe/disqus/' || 'https://disqus.com/api/',
+      apikey    : '83w80EpFJQCLR2qVr1sEt8rP8g7ltMhn6xhdp61edJtvaf6VpQiFgw56uDR6gi0n',
+      shortname : 'fuckcode',
+      url       : "https://www.xbug.me/post/33547.html",
+      identifier: "post/33547.html",
+      title     : "记录 Mac 下终端走代理的方法",
+    });
+  }, window.DisqusJS);
+});
+;
+
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '6322a8919b136af4e096',
+      clientSecret: '4e88d763d0c0fbc8c79dc31206e8e5491b23edad',
+      repo        : 'Gitalk',
+      owner       : 'Eccon',
+      admin       : ['Eccon'],
+      id          : '185e7a16ee6daad3bbe7dccdea16e838',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script></body></html>
