@@ -7,5 +7,5 @@ Disallow: /CNAME
 Disallow: /images/
 
 Sitemap: https://www.xbug.me/sitemap.xml
-Sitemap: https://www.xbug.me/baidu_sitemap.xml
+Sitemap: https://www.xbug.me/baidusitemap.xml
 
