@@ -5,6 +5,9 @@ Disallow: /data
 Disallow: *.md
 Disallow: /CNAME
 Disallow: /images/
+Disallow: /js/
+Disallow: /css/
+Disallow: /404.html
 
 Sitemap: https://www.xbug.me/sitemap.xml
 Sitemap: https://www.xbug.me/baidusitemap.xml
